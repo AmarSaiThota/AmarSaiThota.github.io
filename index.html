@@ -186,6 +186,12 @@
     .link-v { width: 1px; height: 16px; background: #6b6b6b; margin: -12px auto; } /* 3.5:1, WCAG 1.4.11 */
     .apps { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .group { border: 1px solid var(--line); border-radius: 16px; padding: 12px; } /* connectors land on the group, not a gap */
+    /* side by side, a boxed visual's first line of text sits level with the paragraph's first line
+       (measured: border + padding put it 11px low on the diagram, 25px on the chart) */
+    @media (min-width: 901px) {
+      .cols > .system { margin-top: -11px; }
+      .cols > .chart { margin-top: -25px; }
+    }
     .group-label { font: 500 13px/1.6 var(--mono); color: var(--muted); padding: 0 4px 12px; }
 
     /* cards */
@@ -361,7 +367,7 @@
     <section id="research">
       <div class="wrap">
         <h2>Does a language model know when it's wrong?</h2>
-        <p class="meta">Research at UC Davis with Professor Fushing Hsieh · since January 2026</p>
+        <p class="meta">Research at UC Davis with Professor Fushing Hsieh<br>Since January 2026</p>
 
         <div class="cols">
           <div class="prose">
@@ -405,7 +411,7 @@
     <section id="bjrx">
       <div class="wrap">
         <h2>A delivery platform for a working pharmacy</h2>
-        <p class="meta">Software engineering intern at BJRX Pharmacy, Stockton · since June 2026</p>
+        <p class="meta">Software engineering intern at BJRX Pharmacy, Stockton<br>Since June 2026</p>
 
         <div class="cols">
           <div class="prose">
