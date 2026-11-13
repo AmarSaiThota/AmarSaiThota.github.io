@@ -185,6 +185,8 @@
     .node.core small { color: var(--accent); }
     .link-v { width: 1px; height: 16px; background: #6b6b6b; margin: -12px auto; } /* 3.5:1, WCAG 1.4.11 */
     .apps { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .group { border: 1px solid var(--line); border-radius: 16px; padding: 12px; } /* connectors land on the group, not a gap */
+    .group-label { font: 500 13px/1.6 var(--mono); color: var(--muted); padding: 0 4px 12px; }
 
     /* cards */
     .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: var(--gap); }
@@ -407,24 +409,27 @@
 
         <div class="cols">
           <div class="prose">
-            <p>Since June I've been building the system BJRX uses to get prescriptions to patients' doors. It has six kinds of users, from admins to drivers to patients, and 56 API endpoints behind them in FastAPI, with a Next.js front end.</p>
-            <p>Drivers use an iOS app I wrote in SwiftUI. It checks they're inside the delivery geofence and takes a photo and signature at every drop-off. It's patient data, so every change goes into an audit trail nobody can edit, and each pharmacy sees only its own records. The same backend now books vaccinations at three pharmacies.</p>
-            <p>The code is private, so here's the shape of it instead.</p>
+            <p>Since June I've been building the system BJRX uses to get prescriptions to patients' doors. I work across all of it, from the backend to the app in the driver's hand.</p>
+            <p>A delivery only counts if it really happened, so the driver app checks they're at the address and takes a photo and signature at every drop&#8209;off. And because it's patient data, every change is kept in a record nobody can edit, and each pharmacy only ever sees its own.</p>
+            <p>The same backend now books vaccinations at three pharmacies. The code is private, so here's the shape of it instead.</p>
           </div>
 
-          <figure class="system side" aria-label="How the BJRX platform fits together">
+          <figure class="system side" aria-label="How the BJRX platform fits together: six user roles use four apps, which all talk to one FastAPI backend, which keeps the audit trail and sends alerts.">
             <div class="node">6 user roles<small>admins to patients</small></div>
+            <div class="link-v"></div>
+            <div class="group">
+              <p class="group-label">The apps they use</p>
+              <div class="apps">
+                <div class="node">Web platform<small>Next.js</small></div>
+                <div class="node">Dispatch<small>Leaflet live map</small></div>
+                <div class="node">iOS driver app<small>SwiftUI</small></div>
+                <div class="node">Clinic portal<small>FastAPI</small></div>
+              </div>
+            </div>
             <div class="link-v"></div>
             <div class="node core">FastAPI backend<small>56 endpoints · role-based access</small></div>
             <div class="link-v"></div>
-            <div class="apps">
-              <div class="node">Web platform<small>Next.js · TypeScript</small></div>
-              <div class="node">Dispatch<small>live routes on Leaflet</small></div>
-              <div class="node">iOS driver app<small>SwiftUI · geofence · photo + signature</small></div>
-              <div class="node">Clinic portal<small>vaccinations at 3 pharmacies</small></div>
-            </div>
-            <div class="link-v"></div>
-            <div class="node">Audit trail<small>append-only · per-pharmacy data · SMS alerts</small></div>
+            <div class="node">Audit trail and alerts<small>Twilio SMS</small></div>
           </figure>
         </div>
       </div>
