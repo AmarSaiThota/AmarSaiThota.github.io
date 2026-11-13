@@ -16,7 +16,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141414'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-weight='700' font-size='18' text-anchor='middle' fill='%235b9dff'%3EA%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: dark;
@@ -28,15 +28,21 @@
       --accent: #5b9dff;
       --sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
       --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-      --wrap: 1120px;
-      --gut: clamp(16px, 4vw, 40px);
+      /* spacing comes from the taste skill's scale: 4 8 12 16 24 32 48 64 96 128 */
+      --wrap: 1136px;   /* 1040 of content between 48px gutters */
+      --gut: 48px;
+      --top: 72px;
+      --padt: 120px;
+      --padb: 72px;
+      --gap: 48px;      /* heading to content */
       --ease: cubic-bezier(.2, .8, .2, 1);
     }
     *, *::before, *::after { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
+    html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+    a, button { touch-action: manipulation; }
     body {
       margin: 0; background: var(--bg); color: var(--ink);
-      font: 400 17px/1.6 var(--sans);
+      font: 400 16px/1.625 var(--sans);
       -webkit-font-smoothing: antialiased;
     }
     h1, h2, h3, p, dl, dd, figure, ul { margin: 0; }
@@ -49,8 +55,8 @@
 
     .skip {
       position: absolute; left: var(--gut); top: -100px; z-index: 10;
-      background: var(--accent); color: #0b1220; padding: 10px 16px; border-radius: 8px;
-      font-weight: 600; text-decoration: none;
+      background: var(--accent); color: #0b1220; padding: 12px 16px; border-radius: 8px;
+      font-weight: 500; text-decoration: none;
     }
     .skip:focus { top: 12px; }
 
@@ -58,7 +64,6 @@
 
     /* links: prose links stay underlined; standalone links draw their underline */
     .prose a:not(.more) { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-    .prose a:not(.more):hover { text-decoration-thickness: 2px; }
     .more {
       display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
       color: var(--accent); text-decoration: none; font-weight: 500;
@@ -66,92 +71,87 @@
       transition: background-size .25s var(--ease);
     }
     .more::after { content: '→'; transition: transform .2s var(--ease); }
-    .more:hover { background-size: calc(100% - 22px) 1px; }
-    .more:hover::after { transform: translateX(3px); }
 
     /* top bar */
-    .top { display: flex; align-items: center; justify-content: space-between; min-height: 72px; }
-    .top .name { font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
+    .top { display: flex; align-items: center; justify-content: space-between; min-height: var(--top); }
+    .top .name { font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
     .top nav { display: flex; gap: 4px; margin-right: -12px; }
     .top nav a {
       display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px;
-      color: var(--muted); text-decoration: none; font-size: 15px; border-radius: 8px;
+      color: var(--muted); text-decoration: none; font-size: 16px; border-radius: 8px;
       transition: color .16s var(--ease), background-color .16s var(--ease);
     }
-    .top nav a:hover { color: var(--ink); background: var(--raise); }
 
     /* hero */
-    .hero { padding-block: clamp(48px, 9vw, 112px) clamp(64px, 9vw, 112px); }
+    /* the hero fills the first screen alone: headline at the top, the rest at the bottom */
+    .hero { min-height: calc(100svh - var(--top)); display: flex; flex-direction: column; padding-block: 48px 64px; }
     .hero h1 {
-      font-size: clamp(36px, 5.6vw, 72px); line-height: 1.04; font-weight: 600;
+      font-size: clamp(38px, 5.6vw, 72px); line-height: 1.04; font-weight: 500;
       letter-spacing: -.035em; max-width: 19ch; text-wrap: balance;
     }
     .hero-grid {
-      display: grid; grid-template-columns: repeat(12, 1fr); gap: 40px 32px;
-      margin-top: clamp(32px, 4vw, 48px); align-items: end;
+      display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 24px;
+      margin-top: auto; padding-top: var(--gap); align-items: end;
     }
     .hero-grid > :first-child { grid-column: 1 / span 6; }
-    .hero .lede { font-size: clamp(19px, 1.7vw, 22px); line-height: 1.5; color: var(--muted); max-width: 34em; }
+    .hero .lede { font-size: 20px; line-height: 1.5; color: var(--muted); max-width: 34em; }
     .hero .lede strong { color: var(--ink); font-weight: 500; }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      min-height: 48px; padding: 0 20px; border-radius: 8px;
+      min-height: 48px; padding: 0 24px; border-radius: 8px;
       border: 1px solid var(--line); background: var(--raise);
       color: var(--ink); text-decoration: none; font-weight: 500; font-size: 16px;
       transition: transform .16s var(--ease), background-color .16s var(--ease), border-color .16s var(--ease);
     }
-    .btn:hover { transform: translateY(-1px); border-color: #3d3d3d; background: #222; }
     .btn:active { transform: scale(.97); transition-duration: .08s; }
     .btn.primary { background: var(--accent); border-color: var(--accent); color: #0b1220; }
-    .btn.primary:hover { background: #75adff; border-color: #75adff; }
     .now { grid-column: 8 / span 5; border-top: 1px solid var(--line); }
-    .now div { display: grid; grid-template-columns: 7.5em 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-    .now dt { font: 400 13px/1.9 var(--mono); color: var(--muted); }
+    .now div { display: grid; grid-template-columns: 8em 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .now dt { font: 500 13px/1.85 var(--mono); color: var(--muted); }
     .now dd { font-size: 16px; line-height: 1.5; }
 
     /* sections */
-    main > section { border-top: 1px solid var(--line); padding-block: clamp(72px, 10vw, 128px); }
+    main > section { border-top: 1px solid var(--line); padding-block: var(--padt) var(--padb); }
     h2 {
-      font-size: clamp(30px, 3.8vw, 48px); line-height: 1.08; font-weight: 600;
+      font-size: clamp(30px, 3.8vw, 48px); line-height: 1.08; font-weight: 500;
       letter-spacing: -.03em; max-width: 20ch; text-wrap: balance;
     }
     .meta { margin-top: 16px; font: 400 14px/1.6 var(--mono); color: var(--muted); }
-    .cols { display: grid; grid-template-columns: repeat(12, 1fr); gap: 40px 32px; margin-top: clamp(40px, 5vw, 64px); }
+    .cols { display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 24px; margin-top: var(--gap); }
     .cols > .prose { grid-column: 1 / span 6; }
     .cols > .side { grid-column: 8 / span 5; }
     .prose p + p { margin-top: 1em; }
     .prose p { max-width: 36em; }
-    .prose .more { margin-top: 20px; }
-    .tech { margin-top: 20px; font: 400 14px/1.6 var(--mono); color: var(--muted); }
+    .prose .more { margin-top: 16px; }
+    .tech { margin-top: 16px; font: 400 14px/1.6 var(--mono); color: var(--muted); }
 
     /* screenshot */
     .shot {
-      display: block; margin-top: clamp(40px, 5vw, 64px); overflow: hidden;
+      display: block; margin-top: var(--gap); overflow: hidden;
       border-radius: 12px; border: 1px solid var(--line); background: #0d0d10;
     }
     .shot img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; transition: transform .6s var(--ease); }
-    .shot:hover img { transform: scale(1.02); }
 
     /* facts */
     .facts { border-top: 1px solid var(--line); }
-    .facts div { display: grid; grid-template-columns: 6.5em 1fr; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--line); }
-    .facts dt { font: 500 26px/1.1 var(--mono); letter-spacing: -.02em; }
+    .facts div { display: grid; gap: 4px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .facts dt { font: 500 38px/1.1 var(--mono); letter-spacing: -.03em; }
     .facts div:first-child dt { color: var(--accent); }
     .facts dd { color: var(--muted); font-size: 16px; }
 
     /* calibration chart (values from llm-stats-project/results/temperature_scaling_results.csv) */
-    .chart { border: 1px solid var(--line); border-radius: 12px; padding: 24px; background: var(--raise); }
+    .chart { --max: .4; border: 1px solid var(--line); border-radius: 12px; padding: 24px; background: var(--raise); } /* axis top; relabel .axis if changed */
     .chart-title { font-weight: 500; }
     .chart-title span { color: var(--muted); font-weight: 400; }
-    .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 10px; font-size: 14px; color: var(--muted); }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 8px; font-size: 14px; color: var(--muted); }
     .legend li { display: inline-flex; align-items: center; gap: 8px; }
     .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
     .dot.before { background: #8a8a8a; }
     .dot.after { background: var(--accent); }
-    .rows { margin-top: 28px; }
-    .row + .row { margin-top: 28px; }
-    .row-label { font-size: 15px; }
+    .rows { margin-top: 24px; }
+    .row + .row { margin-top: 24px; }
+    .row-label { font-size: 14px; }
     .track {
       position: relative; height: 56px;
       background: linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 25% 100%;
@@ -159,16 +159,17 @@
     }
     .track .bar {
       position: absolute; top: 37px; height: 2px; background: #5a5a5a;
-      left: calc(var(--a) * 250%); width: calc((var(--b) - var(--a)) * 250%);
+      --x1: min(calc(var(--a) / var(--max) * 100%), 100%); --x2: min(calc(var(--b) / var(--max) * 100%), 100%);
+      left: var(--x1); width: calc(var(--x2) - var(--x1));
     }
     .track .dot { position: absolute; top: 31px; margin-left: -7px; box-shadow: 0 0 0 2px var(--raise); }
-    .track .dot.after { left: calc(var(--a) * 250%); }
-    .track .dot.before { left: calc(var(--b) * 250%); }
+    .track .dot.after { left: min(calc(var(--a) / var(--max) * 100%), 100%); }
+    .track .dot.before { left: min(calc(var(--b) / var(--max) * 100%), 100%); }
     .track b {
       position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
       font: 500 13px/1 var(--mono); color: var(--ink); white-space: nowrap;
     }
-    .axis { position: relative; height: 18px; margin-top: 6px; font: 400 12px/1 var(--mono); color: var(--muted); }
+    .axis { position: relative; height: 16px; margin-top: 8px; font: 400 13px/1 var(--mono); color: var(--muted); }
     .axis span { position: absolute; transform: translateX(-50%); }
     .axis span:first-child { transform: none; }
     .axis span:last-child { transform: translateX(-100%); }
@@ -176,50 +177,70 @@
     /* system sketch */
     .system { display: grid; gap: 12px; }
     .node {
-      border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--raise);
+      border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; background: var(--raise);
       font-weight: 500; line-height: 1.35;
     }
     .node small { display: block; margin-top: 4px; font: 400 13px/1.5 var(--mono); color: var(--muted); }
     .node.core { border-color: rgba(91, 157, 255, .55); }
     .node.core small { color: var(--accent); }
-    .link-v { width: 1px; height: 16px; background: #444; margin: -12px auto; }
+    .link-v { width: 1px; height: 16px; background: #6b6b6b; margin: -12px auto; } /* 3.5:1, WCAG 1.4.11 */
     .apps { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
     /* cards */
-    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: clamp(40px, 5vw, 64px); }
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: var(--gap); }
     .card {
-      display: flex; flex-direction: column; padding: 28px; border-radius: 12px;
+      display: flex; flex-direction: column; padding: 32px; border-radius: 12px;
       border: 1px solid var(--line); background: var(--raise); text-decoration: none;
       transition: transform .2s var(--ease), border-color .2s var(--ease);
     }
-    .card:hover { transform: translateY(-2px); border-color: #3d3d3d; }
-    .card h3 { font-size: 22px; line-height: 1.25; font-weight: 600; letter-spacing: -.015em; }
-    .card p { margin-top: 14px; color: var(--muted); }
+    .card h3 { font-size: 20px; line-height: 1.3; font-weight: 500; letter-spacing: -.01em; }
+    .card p { margin-top: 12px; color: var(--muted); }
     .card .tech { margin-top: auto; padding-top: 24px; }
     .card .go { margin-top: 12px; color: var(--accent); font-weight: 500; }
     .card .go::after { content: '→'; display: inline-block; margin-left: 8px; transition: transform .2s var(--ease); }
-    .card:hover .go::after { transform: translateX(3px); }
 
     /* skills */
-    .skills div { padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .skills div { padding: 16px 0; border-bottom: 1px solid var(--line); }
     .skills div:first-child { border-top: 1px solid var(--line); }
-    .skills dt { font: 400 13px/1.6 var(--mono); color: var(--muted); }
+    .skills dt { font: 500 13px/1.6 var(--mono); color: var(--muted); }
     .skills dd { margin-top: 4px; }
 
     /* contact */
     .email {
-      display: inline-block; margin-top: 36px; padding-block: 4px; font-size: clamp(24px, 4.2vw, 48px); font-weight: 500;
+      display: inline-block; padding-block: 4px; font-size: clamp(24px, 2.4vw, 32px); font-weight: 500;
       letter-spacing: -.025em; color: var(--accent); text-decoration: none; overflow-wrap: anywhere;
       background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;
       transition: background-size .3s var(--ease);
     }
-    .email:hover { background-size: 100% 2px; }
-    .elsewhere { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 24px; }
+    .elsewhere { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 16px; }
+    #contact { padding-bottom: var(--padt); }
+    .close { display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 24px; align-items: end; }
+    .close h2 { grid-column: 1 / span 6; }
+    .close .reach { grid-column: 8 / span 5; }
 
     footer { border-top: 1px solid var(--line); }
     footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 24px; color: var(--muted); font-size: 14px; }
     footer a { display: inline-flex; align-items: center; min-height: 44px; }
     footer p { display: flex; align-items: center; min-height: 44px; }
+
+    /* press: every tappable thing answers on touch-down, since the tap flash is off */
+    .card:active, .shot:active img { transform: scale(.99); transition-duration: .08s; }
+    .more:active, .email:active, .top a:active, footer a:active { opacity: .7; }
+
+    /* hover only where there is a real pointer, so nothing stays stuck after a tap */
+    @media (hover: hover) and (pointer: fine) {
+      .prose a:not(.more):hover { text-decoration-thickness: 2px; }
+      .more:hover { background-size: calc(100% - 22px) 1px; }
+      .more:hover::after, .card:hover .go::after { transform: translateX(3px); }
+      .top nav a:hover { color: var(--ink); background: var(--raise); }
+      .btn:hover { transform: translateY(-1px); border-color: #3d3d3d; background: #222; }
+      .btn:hover:active { transform: translateY(-1px) scale(.97); }
+      .btn.primary:hover { background: #75adff; border-color: #75adff; }
+      .shot:hover img { transform: scale(1.02); }
+      .card:hover { transform: translateY(-2px); border-color: #3d3d3d; }
+      .card:hover:active { transform: translateY(-2px) scale(.99); }
+      .email:hover { background-size: 100% 2px; }
+    }
 
     /* motion, after apple.com's measured reveal (30px, ~0.9s), lightened to 16px / 0.6s */
     @media (prefers-reduced-motion: no-preference) {
@@ -230,36 +251,46 @@
       .hero-grid > .now { animation-delay: .55s; }
       @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
 
-      /* sections: rise in once as they enter (data-rise is set by the script at the end) */
+      /* sections: rise in once, in beats (the script at the end sets data-rise):
+         lead = heading + meta, travels 16px; support = body, 8px; fade = the side visual, no travel */
       [data-rise] {
-        opacity: 0; transform: translateY(16px);
+        opacity: 0; transform: translateY(8px);
         transition: opacity .7s cubic-bezier(.25, .1, .3, 1), transform .6s cubic-bezier(.25, .1, .3, 1);
       }
+      [data-rise="lead"] { transform: translateY(16px); }
+      [data-rise="fade"] { transform: none; }
       [data-rise].in { opacity: 1; transform: none; }
 
       /* AccessMap: the screenshot grows into place as it scrolls up the screen */
       @supports (animation-timeline: view()) {
         .shot { animation: zoom linear both; animation-timeline: view(); animation-range: cover 0% cover 45%; }
-        @keyframes zoom { from { transform: scale(.88); border-radius: 28px; } to { transform: none; border-radius: 12px; } }
+        @keyframes zoom { from { transform: scale(.88); } to { transform: none; } }
       }
     }
     @media print { [data-rise] { opacity: 1 !important; transform: none !important; } }
+    /* reduced motion: nothing travels, but colour and underline fades stay */
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { transition: none !important; }
+      .btn, .card, .shot img, .more::after, .card .go::after { transition-property: background-color, border-color, color, background-size; }
     }
 
     @media (max-width: 900px) {
-      .hero-grid, .cols { grid-template-columns: minmax(0, 1fr); }
-      .hero-grid > :first-child, .now, .cols > .prose, .cols > .side { grid-column: 1 / -1; }
+      .hero-grid, .cols, .close { grid-template-columns: minmax(0, 1fr); }
+      .hero-grid > :first-child, .now, .cols > .prose, .cols > .side, .close > * { grid-column: 1 / -1; }
       .cards { grid-template-columns: 1fr; }
     }
-    @media (max-width: 600px) {
-      body { font-size: 16px; }
+    @media (max-width: 900px) { :root { --gut: 32px; } }
+    @media (max-width: 640px) {
+      :root { --gut: 24px; --top: 56px; --padt: 96px; --padb: 48px; --gap: 32px; }
+      .hero { padding-block: 40px 24px; }
+      .hero .lede { font-size: 18px; }
+      .card h3 { font-size: 18px; }
+      .facts dt { font-size: 28px; }
       .shot img { aspect-ratio: 1 / 1; }
       .actions .btn { flex: 1 1 100%; }
       .apps { grid-template-columns: 1fr; }
-      .chart, .card { padding: 20px; }
-      .now div, .facts div { grid-template-columns: 1fr; gap: 2px; }
+      .chart, .card { padding: 24px; }
+      .cards { gap: 12px; }
+      .now div { grid-template-columns: 1fr; gap: 4px; }
     }
   </style>
 </head>
@@ -277,7 +308,7 @@
     </div>
 
     <div class="hero">
-      <h1><span class="w" style="--n:0">I</span> <span class="w" style="--n:1">like</span> <span class="w" style="--n:2">problems</span> <span class="w" style="--n:3">where</span> <span class="w" style="--n:4">the</span> <span class="w" style="--n:5">data</span> <span class="w" style="--n:6">is</span> <span class="w" style="--n:7">messy</span> <span class="w" style="--n:8">and</span> <span class="w" style="--n:9">the</span> <span class="w" style="--n:10">people</span> <span class="w" style="--n:11">affected</span> <span class="w" style="--n:12">are</span> <span class="w" style="--n:13">real.</span></h1>
+      <h1 aria-label="I like problems where the data is messy and the people affected are real."><span aria-hidden="true"><span class="w" style="--n:0">I</span> <span class="w" style="--n:1">like</span> <span class="w" style="--n:2">problems</span> <span class="w" style="--n:3">where</span> <span class="w" style="--n:4">the</span> <span class="w" style="--n:5">data</span> <span class="w" style="--n:6">is</span> <span class="w" style="--n:7">messy</span> <span class="w" style="--n:8">and</span> <span class="w" style="--n:9">the</span> <span class="w" style="--n:10">people</span> <span class="w" style="--n:11">affected</span> <span class="w" style="--n:12">are</span> <span class="w" style="--n:13">real.</span></span></h1>
       <div class="hero-grid">
         <div>
           <p class="lede">I'm <strong>Amar</strong>. I study data science at UC Davis and build software around it: for renters in Davis, wheelchair users crossing campus, a pharmacy driver who needs proof of delivery.</p>
@@ -403,17 +434,17 @@
       <div class="wrap">
         <h2>Two more projects</h2>
         <div class="cards">
-          <a class="card" href="https://github.com/AmarSaiThota/LeaseLens">
-            <h3>LeaseLens: what Davis renters should know before they sign</h3>
+          <a class="card" href="https://github.com/AmarSaiThota/LeaseLens" aria-labelledby="leaselens-t leaselens-go">
+            <h3 id="leaselens-t">LeaseLens: what Davis renters should know before they sign</h3>
             <p>With the AI Student Collective I led LeaseLens, which pulls permit records, code violations and reviews for 30+ Davis properties into one place you can ask questions of. Before any code, we interviewed 20 students and local renters about what they trust and what they don't.</p>
             <p class="tech">Python · PostgreSQL + PostGIS · Supabase · Playwright</p>
-            <span class="go">Code on GitHub</span>
+            <span class="go" id="leaselens-go">Code on GitHub</span>
           </a>
-          <a class="card" href="https://github.com/AmarSaiThota/Final-lstore">
-            <h3>L-Store: a column-store database, from scratch</h3>
+          <a class="card" href="https://github.com/AmarSaiThota/Final-lstore" aria-labelledby="lstore-t lstore-go">
+            <h3 id="lstore-t">L-Store: a column-store database, from scratch</h3>
             <p>For ECS 165A I helped build a database engine in Python: page ranges, base and tail pages, versioned records and merges, so writes stay cheap and older versions stay readable.</p>
             <p class="tech">Python</p>
-            <span class="go">Code on GitHub</span>
+            <span class="go" id="lstore-go">Code on GitHub</span>
           </a>
         </div>
       </div>
@@ -437,12 +468,14 @@
     </section>
 
     <section id="contact">
-      <div class="wrap">
+      <div class="wrap close">
         <h2>Hiring interns?<br> I'd like to hear about it.</h2>
-        <a class="email" href="mailto:vrthota21@gmail.com">vrthota21@gmail.com</a>
-        <div class="elsewhere">
-          <a class="more" href="https://github.com/AmarSaiThota">GitHub</a>
-          <a class="more" href="https://www.linkedin.com/in/amarthota">LinkedIn</a>
+        <div class="reach">
+          <a class="email" href="mailto:vrthota21@gmail.com">vrthota21@gmail.com</a>
+          <div class="elsewhere">
+            <a class="more" href="https://github.com/AmarSaiThota">GitHub</a>
+            <a class="more" href="https://www.linkedin.com/in/amarthota">LinkedIn</a>
+          </div>
         </div>
       </div>
     </section>
@@ -458,12 +491,17 @@
   <script>
     // Rise-in on scroll, once. Content stays visible if this never runs or motion is reduced.
     if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+      const steps = [0, 80, 140, 180]; // beats that enter together; the gaps shrink, so it reads as a wave
       const io = new IntersectionObserver((entries) => {
-        let k = 0;
+        let beat = -1, prev = '', prevSec = null;
         for (const { isIntersecting, target: el } of entries) {
           if (!isIntersecting) continue;
           io.unobserve(el);
-          el.style.transitionDelay = Math.min(k++, 5) * 60 + 'ms'; // things entering together stagger
+          const role = el.dataset.rise, sec = el.closest('section');
+          if (sec !== prevSec) beat = -1; // each section starts its own wave
+          if (!(role === 'lead' && prev === 'lead' && sec === prevSec)) beat++; // a heading and its meta line are one beat
+          prev = role; prevSec = sec;
+          el.style.transitionDelay = steps[Math.min(beat, steps.length - 1)] + 'ms';
           el.classList.add('in');
           el.addEventListener('transitionend', function done(e) {
             if (e.target !== el || e.propertyName !== 'opacity') return;
@@ -472,8 +510,9 @@
           });
         }
       }, { rootMargin: '0px 0px -8% 0px' });
-      document.querySelectorAll('main h2, main .meta, .cols > .prose > *, .chart, .system, .facts > div, .skills > div, .cards > .card, .email, .elsewhere')
-        .forEach((el) => { el.setAttribute('data-rise', ''); io.observe(el); });
+      const roles = { lead: 'main h2, main .meta', support: '.cols > .prose, .cards, .close .reach', fade: '.cols > .side' };
+      for (const [role, sel] of Object.entries(roles)) document.querySelectorAll(sel).forEach((el) => el.setAttribute('data-rise', role));
+      document.querySelectorAll('[data-rise]').forEach((el) => io.observe(el)); // document order, so beats run top to bottom
     }
   </script>
 </body>
