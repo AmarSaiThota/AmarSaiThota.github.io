@@ -208,10 +208,10 @@
     .card .go::after { content: '→'; display: inline-block; margin-left: 8px; transition: transform .2s var(--ease); }
 
     /* skills */
-    .skills div { padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .cols > .skills { grid-column: 1 / -1; }
+    .skills div { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 4px 24px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--line); }
     .skills div:first-child { border-top: 1px solid var(--line); }
     .skills dt { font: 500 13px/1.6 var(--mono); color: var(--muted); }
-    .skills dd { margin-top: 4px; }
 
     /* contact */
     .email {
@@ -293,6 +293,7 @@
       .hero .lede { font-size: 18px; }
       .card h3 { font-size: 18px; }
       .facts dt { font-size: 28px; }
+      .skills div { grid-template-columns: minmax(0, 1fr); }
       .shot img { aspect-ratio: 1 / 1; }
       .actions .btn { flex: 1 1 100%; }
       .apps { grid-template-columns: 1fr; }
